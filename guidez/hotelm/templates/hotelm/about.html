@@ -1,0 +1,9 @@
+{% extends 'hotelm/base.html' %}
+{% block body_block %}
+{% load static %}
+    <img src = "{% static 'images/image1.jpg' %}">
+    <h1>About the Developer</h1>
+    <h1>Everything is awesome!</h1>
+    <h2>Year : {{ time | date:'Y' }}</h2>
+    <h2>Month : {{ time | date:'M' }}</h2>
+{% endblock %}

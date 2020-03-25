@@ -1,14 +1,21 @@
 {% extends 'hotelm/base.html' %}
 {% block body_block %}
 <h1>Results</h1>
-<table>
-{% for item in res %}
-<tr>
-    <td>{{ item.0 }}</td>
-    <td>{{ item.1 }}</td>
-    <td>{{ item.2 }}</td>
-    <td>{{ item.3 }}</td>
-</tr>
-{% endfor %}
+
+<table class="sortable">
+<thead>
+  <tr><th>Name</th><th>Price</th><th>Address</th><th>Link</th></tr>
+</thead>
+<tbody>
+    {% for item in res %}
+    <tr>
+        <td>{{ item.0 }}</td>
+        <td>{{ item.1 }}</td>
+        <td><a class="address-link" href="https://maps.google.com/?q={{ item.2 }}">{{ item.2 }}</a></td>
+        <td><a class="hotel-link" href="{{ item.3 }}">Link</a></td>
+    </tr>
+    {% endfor %}
+</tbody>
 </table>
+
 {% endblock %}

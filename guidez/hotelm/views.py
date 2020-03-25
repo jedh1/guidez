@@ -7,7 +7,7 @@ from .marriott import prepare_driver, fill_form, scrape_results
 
 # Create your views here.
 def index(request):
-    res1 = [['name1', 'location1', 'price1'], ['name2', 'location2', 'price2']]
+    res1 = [['name1', 'location1', 'price1', 'link1'], ['name2', 'location2', 'price2', 'link2'], ['name3', 'location3', 'price3', 'link3']]
     return render(request, 'hotelm/index.html', {'res': res1})
 
 def about(request):
@@ -35,7 +35,7 @@ def get_search(request):
                 res = scrape_results(driver)
                 res2 = []
                 for i in range(len(res[0])):
-                    res2.append([res[0][i], res[1][i], res[2][i], res[3][i]])
+                    res2.append([res[0][i], res[3][i], res[2][i], res[1][i]])
                 print("Search successfully completed")
             except:
                 print("Search failed")

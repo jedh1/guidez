@@ -10,6 +10,8 @@ spc_rates = (
 
 class SearchForm(forms.Form):
     email = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Email'}), required=False)
+    email_box = forms.BooleanField(label='Send results to email?', required=False)
+    email_freq = forms.IntegerField(label='Results will be emailed once every this many days:', max_value=50, required=False)
     destination = forms.CharField(label='Destination', widget=forms.TextInput())
     cin_date = forms.CharField(label='Check-in Date', widget=forms.TextInput())
     cout_date = forms.CharField(label='Check-out Date', widget=forms.TextInput())

@@ -1,24 +1,32 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 import datetime, time
 from .models import Search
 from .forms import SearchForm
-from .marriott import prepare_driver, fill_form, scrape_results
+from .marriott import email_marriott_results, fill_form, prepare_driver, scrape_results
+from guidez.settings import EMAIL_HOST_USER
 
-# Create your views here.
+# Homepage
 def index(request):
     res1 = [['name1', 'location1', 'price1', 'link1'], ['name2', 'location2', 'price2', 'link2'], ['name3', 'location3', 'price3', 'link3']]
     return render(request, 'hotelm/index.html', {'res': res1})
 
+# About page
 def about(request):
     time = datetime.datetime.now()
     return render(request, 'hotelm/about.html', {'time': time})
 
+# Search page
 def get_search(request):
+    # If form is filled:
     if request.method == 'POST':
         form = SearchForm(request.POST)
         if form.is_valid():
+            # Create Search object
             searchobj = Search(
+                recipient = form.cleaned_data['email'],
                 destination = form.cleaned_data['destination'],
                 check_in = form.cleaned_data['cin_date'],
                 check_out = form.cleaned_data['cout_date'],
@@ -26,6 +34,7 @@ def get_search(request):
                 special_rates_code = form.cleaned_data['special_rates_code']
             )
             searchobj.save()
+            # try searching Marriott website
             try:
                 print("prepare driver start")
                 driver = prepare_driver("https://www.marriott.com/search/default.mi")
@@ -33,13 +42,22 @@ def get_search(request):
                 time.sleep(1)
                 print("scrape results start")
                 res = scrape_results(driver)
+                print("init results list")
                 res2 = []
+                print("append results list")
                 for i in range(len(res[0])):
                     res2.append([res[0][i], res[3][i], res[2][i], res[1][i]])
                 print("Search successfully completed")
             except:
                 print("Search failed")
+            # Try to email results
+            try:
+                email_marriott_results(res2, searchobj.recipient)
+                print("Email results success")
+            except:
+                print("Email results failed")
             return render(request, 'hotelm/results.html', {'res': res2})
+    # initial form screen
     else:
         form = SearchForm()
     return render(request, 'hotelm/search.html', {'form': form})

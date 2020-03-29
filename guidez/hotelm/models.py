@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Search(models.Model):
+    recipient = models.CharField(max_length=100, blank=True)
     destination = models.CharField(max_length=128)
     check_in = models.CharField(max_length=16)
     check_out = models.CharField(max_length=16)

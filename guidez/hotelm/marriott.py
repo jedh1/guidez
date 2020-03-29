@@ -1,11 +1,14 @@
 import selenium
 import time
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from guidez.settings import EMAIL_HOST_USER
 
 def prepare_driver(url):
     # options = Options()
@@ -21,6 +24,7 @@ def fill_form(driver, location, cInDate, cOutDate):
     search_location = driver.find_element_by_name('destinationAddress.destination')
     print("found destination address input field")
     search_location.click()
+    print("search_location click success")
     search_location.send_keys(location)
     time.sleep(2)
     # input check-in date
@@ -73,9 +77,24 @@ def scrape_results(driver):
     hotel_price_driver = driver.find_elements_by_xpath("//a[contains(@class,'js-view-rate-btn-link analytics-click t-price-btn t-no-hover-link is-price-link-disable')]//span[contains(@class,'m-display-block')]")
     for hotel in hotel_price_driver:
         hotel_price.append(hotel.text)
-    print(hotel_names, hotel_links, hotel_address, hotel_price)
+    # print(hotel_names, hotel_links, hotel_address, hotel_price)
     return hotel_names, hotel_links, hotel_address, hotel_price
 
+def email_marriott_results(res, recipient):
+    # def takePrice(lst):
+    #     return lst[3]
+    # res.sort(key=takePrice)
+    subject = 'Marriott Search Results - Have a Great Day!'
+    txt_message = 'Have a great day!'
+    html_body = render_to_string('hotelm/results_email.html', {'res': res})
+    msg = EmailMultiAlternatives(
+        subject = subject,
+        body = txt_message,
+        from_email = EMAIL_HOST_USER,
+        to = [recipient],
+    )
+    msg.attach_alternative(html_body, "text/html")
+    msg.send()
 # def combine_data(names, links, address, price):
 
 if __name__ == '__main__':

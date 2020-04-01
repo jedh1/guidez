@@ -12,9 +12,14 @@
      <nav class="navbar navbar-default navbar-static-top">
       <div class="container">
         <ul class="nav navbar-nav">
-          <li><a class="navbar-brand" href="{% url 'index' %}">Home</a></li>
+          <li><a class="navbar-link" href="{% url 'index' %}">Home</a></li>
           <li><a class="navbar-link" href="{% url 'search' %}">Search Marriott</a></li>
           <li><a class="navbar-link" href="{% url 'about' %}">About</a></li>
+          {% if user.is_authenticated %}
+              <li><a class="navbar-link" href="{% url 'logout' %}">Log Out</a></li>
+              {% else %}
+              <li><a class="navbar-link" href="{% url 'login' %}">Log In</a></li>
+          {% endif %}
         </ul>
       </div>
     </nav>

@@ -1,10 +1,12 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.mail import EmailMultiAlternatives
+from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 import datetime, time
 from .models import Search
-from .forms import SearchForm
+from .forms import SearchForm, SignUpForm
 from .marriott import email_marriott_results, fill_form, prepare_driver, scrape_results
 from guidez.settings import EMAIL_HOST_USER
 
@@ -17,6 +19,55 @@ def index(request):
 def about(request):
     time = datetime.datetime.now()
     return render(request, 'hotelm/about.html', {'time': time})
+
+# logout user page
+def logout_request(request):
+    logout(request)
+    message = 'Logout successful.'
+    return render(request, 'hotelm/index.html', {'message': message})
+
+# login user page
+def login_request(request):
+    message = 'test'
+    # if request.user.is_authenticated():
+    #     return render(request, 'hotelm/index.html')
+    if request.user.is_authenticated:
+        return redirect('/', message = 'Already logged in')
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            message = 'Login successful!'
+            return redirect('/', message = 'Login successful!')
+        else:
+            form = AuthenticationForm()
+            message = 'Invalid username or password.'
+            return render(request, "auth/login.html", {"form": form, "message": message})
+    else:
+        form = AuthenticationForm()
+        return render(request, "auth/login.html", {"form": form, "message": message})
+
+# register user page
+def register(request):
+    if request.user.is_authenticated:
+        return redirect('/', message = 'Already registered')
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return render(request, 'hotelm/index.html', {'message': 'registered!'})
+        else:
+            form = SignUpForm()
+            return render(request, 'auth/register.html', {'form': form})
+    else:
+        form = SignUpForm()
+        return render(request, 'auth/register.html', {'form': form})
 
 # Search page
 def get_search(request):

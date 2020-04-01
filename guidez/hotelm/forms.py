@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 spc_rates = (
     ('','None'),
@@ -17,3 +19,11 @@ class SearchForm(forms.Form):
     cout_date = forms.CharField(label='Check-out Date', widget=forms.TextInput())
     special_rates = forms.ChoiceField(choices=spc_rates, required=False)
     special_rates_code = forms.CharField(label='Corporate / Promo / SET #', widget=forms.TextInput(), required=False)
+
+class SignUpForm(UserCreationForm):
+    first_name = forms.CharField(max_length=100, help_text='First Name')
+    email = forms.EmailField(required=True, help_text='Email')
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'email', 'password1', 'password2',)

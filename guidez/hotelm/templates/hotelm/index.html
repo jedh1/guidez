@@ -2,8 +2,13 @@
 
 {% block body_block %}
 {% load static %}
-<h1>Index</h1>
+<h1>Home</h1>
 
+{% if message %}
+<h2>{{ message }}<h2>
+{% endif %}
+
+{% if res %}
 <table class="sortable">
 <thead>
   <tr><th>Name</th><th>Location</th><th>Price</th><th>Link</th></tr>
@@ -19,5 +24,6 @@
     {% endfor %}
 </tbody>
 </table>
+{% endif %}
 
 {% endblock %}

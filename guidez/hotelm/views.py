@@ -69,6 +69,10 @@ def register(request):
         form = SignUpForm()
         return render(request, 'auth/register.html', {'form': form})
 
+def history(request):
+    items = Search.objects.all().filter(user=request.user)
+    return render(request, 'hotelm/history.html', {'items': items})
+
 # Search page
 def get_search(request):
     # If form is filled:
@@ -84,6 +88,8 @@ def get_search(request):
                 special_rates = form.cleaned_data['special_rates'],
                 special_rates_code = form.cleaned_data['special_rates_code']
             )
+            if request.user.is_authenticated:
+                searchobj.user = request.user
             searchobj.save()
             # try searching Marriott website
             try:

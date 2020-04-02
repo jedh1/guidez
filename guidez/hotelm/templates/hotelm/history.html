@@ -1,0 +1,25 @@
+{% extends 'hotelm/base.html' %}
+{% block body_block %}
+<h1>Marriott Search Results History</h1>
+
+<table class="sortable">
+<thead>
+  <tr><th>Destination</th><th>Check-In Date</th><th>Check-Out Date</th><th>Special Rate</th></tr>
+</thead>
+<tbody>
+    {% if items %}
+        {% for item in items %}
+        <tr>
+            <td>{{ item.destination }}</td>
+            <td>{{ item.check_in }}</td>
+            <td>{{ item.check_out }}</td>
+            <td>{{ item.special_rates }}</td>
+        </tr>
+        {% endfor %}
+    {% else %}
+        <h3>No previous searches.</h3>
+    {% endif %}
+</tbody>
+</table>
+
+{% endblock %}

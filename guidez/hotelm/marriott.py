@@ -52,6 +52,12 @@ def fill_form(driver, location, cInDate, cOutDate):
     driver.find_element_by_css_selector("div.l-hsearch-find button").click()
     # wait until next page has loaded before running next function
     wait = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'l-property-name')))
+    # Sort by price
+    driver.find_element_by_xpath("//span[contains(text(),'Distance')]").click()
+    time.sleep(1)
+    driver.find_element_by_xpath("//li[contains(text(),'Price')]").click()
+    time.sleep(2)
+    wait = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'l-property-name')))
     print("fill_form Success")
 
 def scrape_results(driver):
@@ -78,6 +84,7 @@ def scrape_results(driver):
     for hotel in hotel_price_driver:
         hotel_price.append(hotel.text)
     # print(hotel_names, hotel_links, hotel_address, hotel_price)
+    driver.close()
     return hotel_names, hotel_links, hotel_address, hotel_price
 
 def email_marriott_results(res, recipient):

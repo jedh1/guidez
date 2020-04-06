@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'hotelm.apps.HotelmConfig',
+    'background_task',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -79,8 +80,12 @@ WSGI_APPLICATION = 'guidez.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'hotelm',
+        'USER': 'guidez',
+        'PASSWORD': 'thegay',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -137,3 +142,7 @@ EMAIL_USE_SSL = False
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'csprojects200220@gmail.com'
 EMAIL_HOST_PASSWORD = 'thegay30'
+
+# background task settings
+MAX_ATTEMPTS = 1
+BACKGROUND_TASK_RUN_ASYNC = True

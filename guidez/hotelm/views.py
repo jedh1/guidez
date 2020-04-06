@@ -9,15 +9,17 @@ from .models import Search
 from .forms import SearchForm, SignUpForm
 from .marriott import email_marriott_results, fill_form, prepare_driver, scrape_results
 from guidez.settings import EMAIL_HOST_USER
+from background_task import background
+from .tasks import search_recurrence, email_test
 
 # Homepage
 def index(request):
-    res1 = [['name1', 'location1', 'price1', 'link1'], ['name2', 'location2', 'price2', 'link2'], ['name3', 'location3', 'price3', 'link3']]
-    return render(request, 'hotelm/index.html', {'res': res1})
+    return render(request, 'hotelm/index.html')
 
 # About page
 def about(request):
     time = datetime.datetime.now()
+    email_test()
     return render(request, 'hotelm/about.html', {'time': time})
 
 # logout user page
@@ -28,7 +30,7 @@ def logout_request(request):
 
 # login user page
 def login_request(request):
-    message = 'test'
+    message = ''
     # if request.user.is_authenticated():
     #     return render(request, 'hotelm/index.html')
     if request.user.is_authenticated:
@@ -69,10 +71,6 @@ def register(request):
         form = SignUpForm()
         return render(request, 'auth/register.html', {'form': form})
 
-def history(request):
-    items = Search.objects.all().filter(user=request.user)
-    return render(request, 'hotelm/history.html', {'items': items})
-
 # Search page
 def get_search(request):
     # If form is filled:
@@ -90,6 +88,8 @@ def get_search(request):
             )
             if request.user.is_authenticated:
                 searchobj.user = request.user
+            if form.cleaned_data['email_box'] == True:
+                searchobj.recurrence = 2
             searchobj.save()
             # try searching Marriott website
             try:
@@ -104,6 +104,7 @@ def get_search(request):
                 print("append results list")
                 for i in range(len(res[0])):
                     res2.append([res[0][i], res[3][i], res[2][i], res[1][i]])
+                    # this algorithm has an error if price is unavailable.
                 print("Search successfully completed")
             except:
                 print("Search failed")
@@ -113,8 +114,22 @@ def get_search(request):
                 print("Email results success")
             except:
                 print("Email results failed")
+            if searchobj.recurrence > 0:
+                search_recurrence(searchobj.id)
             return render(request, 'hotelm/results.html', {'res': res2})
     # initial form screen
     else:
         form = SearchForm()
     return render(request, 'hotelm/search.html', {'form': form})
+
+def history(request):
+    items = Search.objects.all().filter(user=request.user)
+    return render(request, 'hotelm/history.html', {'items': items})
+
+def delete_search(request):
+    if request.method == 'POST':
+        search_id = int(request.POST.get('search_id'))
+        search_obj = Search.objects.get(pk=search_id)
+        search_obj.delete()
+        items = Search.objects.all().filter(user=request.user)
+        return render(request, 'hotelm/history.html', {'items': items})

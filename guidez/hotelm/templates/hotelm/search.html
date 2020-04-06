@@ -1,11 +1,43 @@
 {% extends 'hotelm/base.html' %}
+{% block title %} Search {% endblock %}
 
 {% load crispy_forms_tags %}
 
 {% block body_block %}
+<p>
+<h2>New Marriott Search</h2>
     <form action="/search/" method="post">
         {% csrf_token %}
-        {{ form|crispy }}
+        <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+                {{ form.email|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-3 mb-0">
+                {{ form.email_box|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-3 mb-0">
+                {{ form.email_freq|as_crispy_field }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+                {{ form.destination|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-3 mb-0">
+                {{ form.cin_date|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-3 mb-0">
+                {{ form.cout_date|as_crispy_field }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+                {{ form.special_rates|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 mb-0">
+                {{ form.special_rates_code|as_crispy_field }}
+            </div>
+        </div>
         <button type="submit" class="btn btn-primary">Search</button>
     </form>
 {% endblock %}

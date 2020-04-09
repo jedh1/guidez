@@ -1,16 +1,18 @@
 from django.http import HttpResponseRedirect
+from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
+from django_apscheduler.jobstores import DjangoJob, register_job
+from apscheduler.schedulers.background import BackgroundScheduler
 import datetime, time
 from .models import Search
 from .forms import SearchForm, SignUpForm
 from .marriott import email_marriott_results, fill_form, prepare_driver, scrape_results
 from guidez.settings import EMAIL_HOST_USER
-from background_task import background
-from .tasks import search_recurrence, email_test
+from .jobs import print_test
 
 # Homepage
 def index(request):
@@ -19,7 +21,23 @@ def index(request):
 # About page
 def about(request):
     time = datetime.datetime.now()
-    email_test()
+    searchobj = Search(
+        recipient = 'test@test.com',
+        destination = 'test',
+        check_in = 'test check-in',
+        check_out = 'test check-out',
+        special_rates = 'test',
+        recurrence = 5,
+        )
+    if request.user.is_authenticated:
+        searchobj.user = request.user
+    searchobj.save()
+    searchobj_id=str(int(searchobj.id))
+    scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
+    scheduler.add_job(print_test, 'interval', seconds = 3, id=searchobj_id, max_instances = 3, coalesce = True, args=[searchobj_id])
+    register_job(scheduler)
+    scheduler.start()
+    print(scheduler.get_jobs())
     return render(request, 'hotelm/about.html', {'time': time})
 
 # logout user page
@@ -131,5 +149,11 @@ def delete_search(request):
         search_id = int(request.POST.get('search_id'))
         search_obj = Search.objects.get(pk=search_id)
         search_obj.delete()
+        search_id_str = str(search_id)
+        try:
+            DjangoJob.objects.get(name=search_id_str).delete()
+            print("DjangoJob deleted. ID=",search_id)
+        except:
+            next
         items = Search.objects.all().filter(user=request.user)
         return render(request, 'hotelm/history.html', {'items': items})

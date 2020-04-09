@@ -1,17 +1,27 @@
-from background_task import background
+
 from django.shortcuts import render
 from .marriott import email_marriott_results, fill_form, prepare_driver, scrape_results
 from .models import Search
 from guidez.settings import EMAIL_HOST_USER
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
+from apscheduler.schedulers.background import BackgroundScheduler
+from django_apscheduler.jobstores import DjangoJobStore, register_events
+import time
 
-@background(schedule=1)
-def email_test():
-    print('email_test start')
-    email_marriott_results(['test1','test2','test3','test4'], 'jedhcl@gmail.com')
+def print_test(search_id):
+    search_id_int = int(search_id)
+    try:
+        searchobj = Search.objects.get(id=search_id_int)
+        if searchobj.recurrence > 0:
+            time.sleep(2)
+            print("print test")
+            searchobj.recurrence -= 1
+            searchobj.save()
+    except:
+        print("print_test function:::Search obj id=", search_id_int, " not found")
 
-@background(schedule=10)
+'''
 def search_recurrence(search_id):
     searchobj = Search.objects.get(pk=search_id)
     if searchobj.recurrence == 0:
@@ -45,3 +55,4 @@ def search_recurrence(search_id):
     if searchobj.recurrence > 0:
         search_recurrence(searchobj.id)
     return print('search_recurrence successful')
+'''

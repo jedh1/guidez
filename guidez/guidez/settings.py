@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_apscheduler',
     'hotelm.apps.HotelmConfig',
     'background_task',
 ]
@@ -146,3 +147,18 @@ EMAIL_HOST_PASSWORD = 'thegay30'
 # background task settings
 MAX_ATTEMPTS = 1
 BACKGROUND_TASK_RUN_ASYNC = True
+
+# apscheduler settings
+# This scheduler config will:
+# - Store jobs in the project database
+# - Execute jobs in threads inside the application process
+SCHEDULER_CONFIG = {
+    "apscheduler.jobstores.default": {
+        "class": "django_apscheduler.jobstores:DjangoJobStore"
+    },
+    'apscheduler.executors.processpool': {
+        "type": "threadpool"
+    },
+}
+SCHEDULER_AUTOSTART = True
+APSCHEDULER_DATETIME_FORMAT =  "N j, Y, f:s a"  # Default

@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '!)@cfb@h#z$!t39jedxw6ug(!!nl90v)ahf!(u0858ig+oa=r_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['guidez.herokuapp.com']
 
 
 # Application definition
@@ -80,14 +80,9 @@ WSGI_APPLICATION = 'guidez.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'hotelm',
-        'USER': 'guidez',
-        'PASSWORD': 'thegay',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        default=config('postgres://xaksvvnimzfnkw:0dd8da7c30d097204551afc5a5b8352a9a126fd495529bf423d949fefbc60ee3@ec2-18-206-84-251.compute-1.amazonaws.com:5432/dead6hg6adk141')
+    )
 }
 
 

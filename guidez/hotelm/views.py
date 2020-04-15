@@ -107,7 +107,7 @@ def get_search(request):
             )
             if request.user.is_authenticated:
                 searchobj.user = request.user
-            if form.cleaned_data['email_box'] == True:
+            if form.cleaned_data['email_box'] == True and request.user.is_authenticated:
                 searchobj.recurrence = int(form.cleaned_data['email_freq']) + 1
             else:
                 searchobj.recurrence = 1
@@ -118,7 +118,7 @@ def get_search(request):
             #create recurrence object
             if searchobj.recurrence > 0:
                 scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
-                scheduler.add_job(search_and_email, 'interval', seconds = 120, id=searchobj_id, max_instances = 3, coalesce = True, args=[searchobj_id])
+                scheduler.add_job(search_and_email, 'interval', seconds = 86400, id=searchobj_id, max_instances = 3, coalesce = True, args=[searchobj_id])
                 register_job(scheduler)
                 scheduler.start()
             return render(request, 'hotelm/results.html', {'res': res2})
@@ -144,3 +144,6 @@ def delete_search(request):
             next
         items = Search.objects.all().filter(user=request.user)
         return render(request, 'hotelm/history.html', {'items': items})
+
+def test(request):
+    return render(request, 'hotelm/test.html')

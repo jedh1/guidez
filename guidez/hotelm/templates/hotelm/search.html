@@ -1,6 +1,7 @@
 {% extends 'hotelm/base.html' %}
 {% block title %} Search {% endblock %}
 
+{% load static %}
 {% load crispy_forms_tags %}
 
 {% block body_block %}
@@ -8,17 +9,6 @@
 <h2>New Marriott Search</h2>
     <form action="/search/" method="post">
         {% csrf_token %}
-        <div class="form-row">
-            <div class="form-group col-md-6 mb-0">
-                {{ form.email|as_crispy_field }}
-            </div>
-            <div class="form-group col-md-3 mb-0">
-                {{ form.email_box|as_crispy_field }}
-            </div>
-            <div class="form-group col-md-3 mb-0">
-                {{ form.email_freq|as_crispy_field }}
-            </div>
-        </div>
         <div class="form-row">
             <div class="form-group col-md-6 mb-0">
                 {{ form.destination|as_crispy_field }}
@@ -38,6 +28,34 @@
                 {{ form.special_rates_code|as_crispy_field }}
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Search</button>
+        <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+                {{ form.email|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-3 mb-0">
+                {{ form.email_box|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-3 mb-0">
+                {{ form.email_freq|as_crispy_field }}
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="show_button">Search</button>
     </form>
+<div id="load" style="display:none"><img src="{% static "images/loading.gif" %}" width="50"></div>
+<div id="update" style="display:none">Hello!</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    var button = document.getElementById('show_button')
+    button.addEventListener('click',hideshow,false);
+
+    function hideshow() {
+        document.getElementById('show_button').style.display = 'block';
+        this.style.display = 'none'
+        document.getElementById('load').style.display = 'block';
+        document.getElementById('update').innerHTML = 'Searching... Please wait a moment.';
+        document.getElementById('update').style.display = 'block';
+    }
+</script>
 {% endblock %}

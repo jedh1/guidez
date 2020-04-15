@@ -1,0 +1,32 @@
+{% extends 'hotelm/base.html' %}
+{% block title %} Test Page {% endblock %}
+
+{% block body_block %}
+{% load static %}
+<p>
+    <h2>Test</h2>
+    <p>Year : {{ time | date:'Y' }}, Month : {{ time | date:'M' }}</p>
+    <h3>This site is powered by Django</h3>
+<br>
+
+
+<button type="submit" class="btn btn-primary" id="show_button">Test</button>
+<div id="load" style="display:none"><img src="{% static "images/loading.gif" %}" width="50"></div>
+<div id="update" style="display:none">Test</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+    var button = document.getElementById('show_button')
+    button.addEventListener('click',hideshow,false);
+
+    function hideshow() {
+        document.getElementById('show_button').style.display = 'block';
+        this.style.display = 'none'
+        document.getElementById('load').style.display = 'block';
+        document.getElementById('update').innerHTML = 'Searching... Please wait a moment.';
+        document.getElementById('update').style.display = 'block';
+    }
+</script>
+{% endblock %}

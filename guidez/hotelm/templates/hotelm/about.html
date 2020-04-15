@@ -1,11 +1,13 @@
 {% extends 'hotelm/base.html' %}
 {% block title %} About {% endblock %}
 
+
 {% block body_block %}
 {% load static %}
 <p>
     <h2>About</h2>
     <p>Year : {{ time | date:'Y' }}, Month : {{ time | date:'M' }}</p>
     <h3>This site is powered by Django</h3>
+<p>
 
 {% endblock %}

@@ -25,6 +25,11 @@ def search_and_email(searchobj_id):
     try:
         searchobj_id_int = int(searchobj_id)
         searchobj = Search.objects.get(pk=searchobj_id_int)
+        if searchobj.recurrence < 1:
+            try:
+                DjangoJob.objects.get(name=searchobj_id).delete()
+            except:
+                return "reccurrence < 1, DjangoJob deletion failed"
     except:
         return "search_and_email: searchobj_id retrieve failed."
     try:

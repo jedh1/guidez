@@ -12,7 +12,7 @@ from .models import Search
 from .forms import SearchForm, SignUpForm
 from .marriott import email_marriott_results, fill_form, prepare_driver, scrape_results
 from guidez.settings import EMAIL_HOST_USER
-from .jobs import print_test
+from .jobs import print_test, search_and_email
 
 # Homepage
 def index(request):
@@ -21,6 +21,7 @@ def index(request):
 # About page
 def about(request):
     time = datetime.datetime.now()
+    ''' # Test BackgroundScheduler
     searchobj = Search(
         recipient = 'test@test.com',
         destination = 'test',
@@ -37,7 +38,7 @@ def about(request):
     scheduler.add_job(print_test, 'interval', seconds = 3, id=searchobj_id, max_instances = 3, coalesce = True, args=[searchobj_id])
     register_job(scheduler)
     scheduler.start()
-    print(scheduler.get_jobs())
+    '''
     return render(request, 'hotelm/about.html', {'time': time})
 
 # logout user page
@@ -107,33 +108,19 @@ def get_search(request):
             if request.user.is_authenticated:
                 searchobj.user = request.user
             if form.cleaned_data['email_box'] == True:
-                searchobj.recurrence = 2
+                searchobj.recurrence = int(form.cleaned_data['email_freq']) + 1
+            else:
+                searchobj.recurrence = 1
             searchobj.save()
-            # try searching Marriott website
-            try:
-                print("prepare driver start")
-                driver = prepare_driver("https://www.marriott.com/search/default.mi")
-                fill_form(driver, searchobj.destination, searchobj.check_in, searchobj.check_out)
-                time.sleep(1)
-                print("scrape results start")
-                res = scrape_results(driver)
-                print("init results list")
-                res2 = []
-                print("append results list")
-                for i in range(len(res[0])):
-                    res2.append([res[0][i], res[3][i], res[2][i], res[1][i]])
-                    # this algorithm has an error if price is unavailable.
-                print("Search successfully completed")
-            except:
-                print("Search failed")
-            # Try to email results
-            try:
-                email_marriott_results(res2, searchobj.recipient)
-                print("Email results success")
-            except:
-                print("Email results failed")
+            #search and email results
+            searchobj_id=str(int(searchobj.id))
+            res2 = search_and_email(searchobj_id)
+            #create recurrence object
             if searchobj.recurrence > 0:
-                search_recurrence(searchobj.id)
+                scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
+                scheduler.add_job(search_and_email, 'interval', seconds = 120, id=searchobj_id, max_instances = 3, coalesce = True, args=[searchobj_id])
+                register_job(scheduler)
+                scheduler.start()
             return render(request, 'hotelm/results.html', {'res': res2})
     # initial form screen
     else:

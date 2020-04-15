@@ -11,9 +11,13 @@ from selenium.webdriver.support.wait import WebDriverWait
 from guidez.settings import EMAIL_HOST_USER
 
 def prepare_driver(url):
-    # options = Options()
-    # options.add_argument('-headless')
-    driver = webdriver.Chrome(executable_path="hotelm/drivers/chromedriver.exe")
+    #Chrome options
+    options = Options()
+    options.add_argument('--window-size=1920,1080')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--headless')
+    #load Chrome driver
+    driver = webdriver.Chrome(executable_path="hotelm/drivers/chromedriver.exe", chrome_options=options)
     driver.get(url)
     wait = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, 'destinationAddress.destination')))
     return driver
@@ -61,25 +65,25 @@ def fill_form(driver, location, cInDate, cOutDate):
     print("fill_form Success")
 
 def scrape_results(driver):
-    print("scrape results start")
+    # print("scrape results start")
     hotel_names = list()
     hotel_links = list()
     hotel_address = list()
     hotel_price = list()
     dist = list()
     hotel_names_driver = driver.find_elements_by_class_name("l-property-name")
-    print("Hotel names start")
+    # print("Hotel names start")
     for hotel in hotel_names_driver:
         hotel_names.append(hotel.text)
     hotel_links_driver = driver.find_elements_by_class_name("js-hotel-quickview-link")
-    print("hotel links start")
+    # print("hotel links start")
     for hotel in hotel_links_driver:
         hotel_links.append(hotel.get_attribute('href'))
-    print("hotel address start")
+    # print("hotel address start")
     hotel_address_driver = driver.find_elements_by_class_name("m-hotel-address")
     for hotel in hotel_address_driver:
         hotel_address.append(hotel.text)
-    print("hotel price start")
+    # print("hotel price start")
     hotel_price_driver = driver.find_elements_by_xpath("//a[contains(@class,'js-view-rate-btn-link analytics-click t-price-btn t-no-hover-link is-price-link-disable')]//span[contains(@class,'m-display-block')]")
     for hotel in hotel_price_driver:
         hotel_price.append(hotel.text)
@@ -104,6 +108,7 @@ def email_marriott_results(res, recipient):
     msg.send()
 # def combine_data(names, links, address, price):
 
+'''
 if __name__ == '__main__':
     try:
         url = "https://www.marriott.com/search/default.mi"
@@ -114,3 +119,4 @@ if __name__ == '__main__':
         print("main.py successfully completed")
     except:
         print("Fail")
+'''

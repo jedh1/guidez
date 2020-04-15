@@ -1,4 +1,3 @@
-
 from django.shortcuts import render
 from .marriott import email_marriott_results, fill_form, prepare_driver, scrape_results
 from .models import Search
@@ -21,17 +20,15 @@ def print_test(search_id):
     except:
         print("print_test function:::Search obj id=", search_id_int, " not found")
 
-'''
-def search_recurrence(search_id):
-    searchobj = Search.objects.get(pk=search_id)
-    if searchobj.recurrence == 0:
-        print("object recurrence == 0")
-        return
-    searchobj.recurrence -= 1
-    searchobj.save()
-    print("obj.recurrence value after run:", searchobj.recurrence)
+def search_and_email(searchobj_id):
+    # try searching Marriott website
     try:
-        print("Recurrence search, prepare driver start")
+        searchobj_id_int = int(searchobj_id)
+        searchobj = Search.objects.get(pk=searchobj_id_int)
+    except:
+        return "search_and_email: searchobj_id retrieve failed."
+    try:
+        print("prepare driver start")
         driver = prepare_driver("https://www.marriott.com/search/default.mi")
         fill_form(driver, searchobj.destination, searchobj.check_in, searchobj.check_out)
         time.sleep(1)
@@ -43,16 +40,19 @@ def search_recurrence(search_id):
         for i in range(len(res[0])):
             res2.append([res[0][i], res[3][i], res[2][i], res[1][i]])
             # this algorithm has an error if price is unavailable.
-        print("Search: successfully completed")
+        print("Search successfully completed")
     except:
-        print("Search: failed")
+        print("Search failed")
     # Try to email results
     try:
-        email_marriott_results(res2, searchobj.recipient)
-        print("Email results: success")
+        if searchobj.recipient:
+            email_marriott_results(res2, searchobj.recipient)
+            print("Email results success")
     except:
-        print("Email results: failed")
+        print("Email results failed")
+    if not res2:
+        return 'Results failed'
     if searchobj.recurrence > 0:
-        search_recurrence(searchobj.id)
-    return print('search_recurrence successful')
-'''
+        searchobj.recurrence -= 1
+        searchobj.save()
+    return res2

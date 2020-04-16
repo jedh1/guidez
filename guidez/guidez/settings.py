@@ -80,12 +80,7 @@ WSGI_APPLICATION = 'guidez.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=config('postgres://xaksvvnimzfnkw:0dd8da7c30d097204551afc5a5b8352a9a126fd495529bf423d949fefbc60ee3@ec2-18-206-84-251.compute-1.amazonaws.com:5432/dead6hg6adk141')
-    )
-}
-
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

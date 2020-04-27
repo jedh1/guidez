@@ -77,8 +77,8 @@ def fill_form(driver, location, cInDate, cOutDate):
     time.sleep(1)
     driver.find_element_by_xpath("//li[contains(text(),'Price')]").click()
     print('Clicked sort by price')
-    time.sleep(2)
-    wait = WebDriverWait(driver, 60).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'l-property-name')))
+    time.sleep(10)
+    #wait = WebDriverWait(driver, 60).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'l-property-name')))
     print("fill_form Success")
 
 def scrape_results(driver):

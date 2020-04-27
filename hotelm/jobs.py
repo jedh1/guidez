@@ -36,7 +36,7 @@ def search_and_email(searchobj_id):
     try:
         print("prepare driver start")
         driver = prepare_driver("https://www.marriott.com/search/default.mi")
-        fill_form(driver, searchobj.destination, searchobj.check_in, searchobj.check_out)
+        fill_form(driver, searchobj.destination, searchobj.check_in, searchobj.check_out, searchobj.special_rates, searchobk.special_rates_code)
         time.sleep(1)
         print("scrape results start")
         res = scrape_results(driver)

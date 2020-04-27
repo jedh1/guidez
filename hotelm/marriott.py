@@ -31,10 +31,10 @@ def prepare_driver(url):
     chrome_options.add_argument("--no-sandbox")
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
     driver.get(url)
-    wait = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, 'destinationAddress.destination')))
+    wait = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.NAME, 'destinationAddress.destination')))
     return driver
 
-def fill_form(driver, location, cInDate, cOutDate, special_rates, special_rates_code):
+def fill_form(driver, location, cInDate, cOutDate):
     print("fill_form start")
     # input location
     search_location = driver.find_element_by_name('destinationAddress.destination')
@@ -58,19 +58,19 @@ def fill_form(driver, location, cInDate, cOutDate, special_rates, special_rates_
     search_checkout.send_keys(cOutDate)
     search_checkout.send_keys(Keys.ESCAPE)
     # input special rates
-    if special_rates:
-        search_special = driver.find_element_by_class_name('js-special-rates-header')
-        search_special.click()
-        time.sleep(1)
-        search_special2 = driver.find_element_by_xpath("//label[contains(text(),'Corporate')]")
-        search_special2.click()
-    if special_rates_code:
-        driver.find_element_by_name("corporateCode").send_keys(str(special_rates_code))
+    # if special_rates:
+    #     search_special = driver.find_element_by_class_name('js-special-rates-header')
+    #     search_special.click()
+    #     time.sleep(1)
+    #     search_special2 = driver.find_element_by_xpath("//label[contains(text(),'Corporate')]")
+    #     search_special2.click()
+    # if special_rates_code:
+    #     driver.find_element_by_name("corporateCode").send_keys(str(special_rates_code))
     # find search button and click it
     driver.find_element_by_css_selector("div.l-hsearch-find button").click()
     print('Clicked search button')
     # wait until next page has loaded before running next function
-    wait = WebDriverWait(driver, 100).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'l-property-name')))
+    wait = WebDriverWait(driver, 60).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'l-property-name')))
     # Sort by price
     driver.find_element_by_xpath("//span[contains(text(),'Distance')]").click()
     print('Clicked sort menu')
@@ -78,7 +78,7 @@ def fill_form(driver, location, cInDate, cOutDate, special_rates, special_rates_
     driver.find_element_by_xpath("//li[contains(text(),'Price')]").click()
     print('Clicked sort by price')
     time.sleep(2)
-    wait = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'l-property-name')))
+    wait = WebDriverWait(driver, 60).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'l-property-name')))
     print("fill_form Success")
 
 def scrape_results(driver):

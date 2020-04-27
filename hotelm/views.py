@@ -12,7 +12,7 @@ from .models import Search
 from .forms import SearchForm, SignUpForm
 from .marriott import email_marriott_results, fill_form, prepare_driver, scrape_results
 from guidez.settings import EMAIL_HOST_USER
-from .jobs import print_test, search_and_email
+from .jobs import search_and_email
 
 # Homepage
 def index(request):

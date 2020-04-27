@@ -1,0 +1,37 @@
+{% extends 'hotelm/base.html' %}
+{% block title %} Search Results - History {% endblock %}
+
+{% block body_block %}
+<p>
+<h2>Marriott Search Results History</h2>
+
+<table class="sortable">
+
+{% if items %}
+<tbody>
+    <thead>
+        <tr><th>Destination</th><th>Check-In Date</th><th>Check-Out Date</th><th>Special Rate</th><th>Recurrences left</th></tr>
+    </thead>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.destination }}</td>
+            <td>{{ item.check_in }}</td>
+            <td>{{ item.check_out }}</td>
+            <td>{{ item.special_rates }}</td>
+            <td>{{ item.recurrence }}</td>
+            <td>
+                <form action="/delete_search/" method="post">
+                    {% csrf_token %}
+				    <input type="hidden" name="search_id" value="{{ item.id }}" />
+			        <input type="submit" value="Delete search">
+			    </form>
+            </td>
+        </tr>
+        {% endfor %}
+</tbody>
+    {% else %}
+        <p><h3>No previous searches.</h3>
+{% endif %}
+</table>
+
+{% endblock %}

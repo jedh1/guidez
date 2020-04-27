@@ -114,6 +114,7 @@ def get_search(request):
             searchobj.save()
             #search and email results
             searchobj_id=str(int(searchobj.id))
+            res2 = []
             res2 = search_and_email(searchobj_id)
             #create recurrence object
             if searchobj.recurrence > 0:

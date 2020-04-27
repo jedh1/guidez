@@ -65,7 +65,7 @@ def fill_form(driver, location, cInDate, cOutDate, special_rates, special_rates_
         search_special2 = driver.find_element_by_xpath("//label[contains(text(),'Corporate')]")
         search_special2.click()
     if special_rates_code:
-        driver.find_element_by_name("corporateCode").send_keys(str(special_rates_code)))
+        driver.find_element_by_name("corporateCode").send_keys(str(special_rates_code))
     # find search button and click it
     driver.find_element_by_css_selector("div.l-hsearch-find button").click()
     print('Clicked search button')

@@ -22,6 +22,7 @@ def print_test(search_id):
 
 def search_and_email(searchobj_id):
     # try searching Marriott website
+    res2 = []
     try:
         searchobj_id_int = int(searchobj_id)
         searchobj = Search.objects.get(pk=searchobj_id_int)
@@ -40,7 +41,6 @@ def search_and_email(searchobj_id):
         print("scrape results start")
         res = scrape_results(driver)
         print("init results list")
-        res2 = []
         print("append results list")
         for i in range(len(res[0])):
             res2.append([res[0][i], res[3][i], res[2][i], res[1][i]])

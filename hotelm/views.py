@@ -118,7 +118,7 @@ def get_search(request):
             res2 = search_and_email(searchobj_id)
             if res2 == 'Results failed':
                 fail = 'Search failed. Please resubmit search form.'
-                return render(request, 'hotelm/results.html', {'res': '1'}, {'fail':fail})
+                return render(request, 'hotelm/results.html', {'res': '1', 'fail':fail})
             #create recurrence object
             if searchobj.recurrence > 0:
                 scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)

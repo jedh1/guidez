@@ -1,5 +1,6 @@
 import selenium
 import time
+import os
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from selenium import webdriver
@@ -12,12 +13,21 @@ from guidez.settings import EMAIL_HOST_USER
 
 def prepare_driver(url):
     #Chrome options
-    options = Options()
-    options.add_argument('--window-size=1920,1080')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--headless')
-    #load Chrome driver
-    driver = webdriver.Chrome(executable_path="hotelm/drivers/chromedriver.exe", chrome_options=options)
+    # options = Options()
+    # options.add_argument('--window-size=1920,1080')
+    # options.add_argument('--disable-gpu')
+    # options.add_argument('--headless')
+    # #load Chrome driver
+    # driver = webdriver.Chrome(executable_path="hotelm/drivers/chromedriver.exe", chrome_options=options)
+
+    # Selenium for herokuapp
+    # https://www.andressevilla.com/running-chromedriver-with-python-selenium-on-heroku/
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
     driver.get(url)
     wait = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, 'destinationAddress.destination')))
     return driver

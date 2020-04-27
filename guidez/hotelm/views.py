@@ -146,4 +146,5 @@ def delete_search(request):
         return render(request, 'hotelm/history.html', {'items': items})
 
 def test(request):
-    return render(request, 'hotelm/test.html')
+    results = [['test1asdfadsfas', 'test2', 'test3', 'test4'],['test5asdfasdfas','test6','test7','test8']]
+    return render(request, 'hotelm/test.html', {'res': results})

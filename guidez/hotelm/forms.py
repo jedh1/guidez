@@ -11,14 +11,14 @@ spc_rates = (
 )
 
 class SearchForm(forms.Form):
-    email = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Email'}), required=False)
-    email_box = forms.BooleanField(label='Send results to email?', required=False)
-    email_freq = forms.IntegerField(label='Results will be emailed once every this many days (0-30):', min_value=0, max_value=30, required=False)
+    email = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Email (Optional)'}), required=False)
+    email_box = forms.BooleanField(label='Send results to email? (Optional)', required=False)
+    email_freq = forms.IntegerField(label='Send results for (0-30) days:', min_value=0, max_value=30, required=False)
     destination = forms.CharField(label='Destination', widget=forms.TextInput())
     cin_date = forms.CharField(label='Check-in Date', widget=forms.TextInput())
     cout_date = forms.CharField(label='Check-out Date', widget=forms.TextInput())
-    special_rates = forms.ChoiceField(choices=spc_rates, required=False)
-    special_rates_code = forms.CharField(label='Corporate / Promo / SET #', widget=forms.TextInput(), required=False)
+    special_rates = forms.ChoiceField(label= 'Special rates (Optional)', choices=spc_rates, required=False)
+    special_rates_code = forms.CharField(label='Corporate / Promo / SET # (Optional)', widget=forms.TextInput(), required=False)
 
 class SignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=100, help_text='First Name')

@@ -1,32 +1,45 @@
 {% extends 'hotelm/base.html' %}
-{% block title %} Test Page {% endblock %}
+{% block title %} Test {% endblock %}
 
-{% block body_block %}
-{% load static %}
-<p>
-    <h2>Test</h2>
-    <p>Year : {{ time | date:'Y' }}, Month : {{ time | date:'M' }}</p>
-    <h3>This site is powered by Django</h3>
-<br>
-
-
-<button type="submit" class="btn btn-primary" id="show_button">Test</button>
-<div id="load" style="display:none"><img src="{% static "images/loading.gif" %}" width="50"></div>
-<div id="update" style="display:none">Test</div>
-
+{% block head %}
+<style>
+table.sortable thead {
+    background-color:#959595;
+    color: black;
+    font-weight: bold;
+    cursor: default;
+}
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 3px;
+}
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
 {% endblock %}
 
-{% block javascript %}
-<script>
-    var button = document.getElementById('show_button')
-    button.addEventListener('click',hideshow,false);
+{% block body_block %}
+<p>
+<h2>TEST Marriott Search Results</h2>
+<br>
+Click on the table headers to sort.
+<br>
+<table class="sortable">
+<thead>
+  <tr><th>Name</th><th>Price</th><th>Address</th><th>Link</th></tr>
+</thead>
+<tbody>
+    {% for item in res %}
+    <tr>
+        <td>{{ item.0 }}</td>
+        <td>{{ item.1 }}</td>
+        <td><a class="address-link" href="https://maps.google.com/?q={{ item.2 }}">{{ item.2 }}</a></td>
+        <td><a class="hotel-link" href="{{ item.3 }}">Link</a></td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
 
-    function hideshow() {
-        document.getElementById('show_button').style.display = 'block';
-        this.style.display = 'none'
-        document.getElementById('load').style.display = 'block';
-        document.getElementById('update').innerHTML = 'Searching... Please wait a moment.';
-        document.getElementById('update').style.display = 'block';
-    }
-</script>
 {% endblock %}

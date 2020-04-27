@@ -6,6 +6,22 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   {% load static %}
   <script src="{% static 'js/sorttable.js' %}"></script>
+  <style>
+  table.sortable thead {
+      background-color:#959595;
+      color: black;
+      font-weight: bold;
+      cursor: default;
+  }
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 3px;
+  }
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+  </style>
 </head>
 <body>
 <center>

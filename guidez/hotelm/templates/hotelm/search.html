@@ -28,7 +28,7 @@
                 {{ form.special_rates_code|as_crispy_field }}
             </div>
         </div>
-        <div class="form-row">
+        <div class="form-row align-items-end">
             <div class="form-group col-md-6 mb-0">
                 {{ form.email|as_crispy_field }}
             </div>
@@ -43,6 +43,8 @@
     </form>
 <div id="load" style="display:none"><img src="{% static "images/loading.gif" %}" width="50"></div>
 <div id="update" style="display:none">Hello!</div>
+<p>
+    Note: Search results can be sent daily up to 30 days if an email address is entered and the option is checked. <p>
 {% endblock %}
 
 {% block javascript %}
@@ -54,7 +56,7 @@
         document.getElementById('show_button').style.display = 'block';
         this.style.display = 'none'
         document.getElementById('load').style.display = 'block';
-        document.getElementById('update').innerHTML = 'Searching... Please wait a moment.';
+        document.getElementById('update').innerHTML = 'Searching... Please wait a minute.';
         document.getElementById('update').style.display = 'block';
     }
 </script>

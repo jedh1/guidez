@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -150,5 +150,11 @@ def delete_search(request):
         return render(request, 'hotelm/history.html', {'items': items})
 
 def test(request):
-    results = [['test1asdfadsfas', 'test2', 'test3', 'test4'],['test5asdfasdfas','test6','test7','test8']]
-    return render(request, 'hotelm/test.html', {'res': results})
+    scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
+    def print_delay:
+        sleep(33)
+        print('test')
+    scheduler.add_job(print_delay, 'interval', seconds = 35, max_instances = 3, coalesce = True)
+    register_job(scheduler)
+    scheduler.start()
+    return render(request, 'hotelm/index.html')

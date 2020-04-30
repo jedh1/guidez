@@ -13,11 +13,15 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import dj_database_url
 import django_heroku
+import dotenv
 # import psycopg2
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+# Run sqlite locally
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -45,12 +49,14 @@ INSTALLED_APPS = [
     'django_apscheduler',
     'hotelm.apps.HotelmConfig',
     'background_task',
+    'django_q',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -81,14 +87,14 @@ WSGI_APPLICATION = 'guidez.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
+# load database from the DATABASE_URL environment variable
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+# DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 
 
@@ -136,6 +142,7 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -165,4 +172,23 @@ SCHEDULER_CONFIG = {
 SCHEDULER_AUTOSTART = True
 APSCHEDULER_DATETIME_FORMAT =  "N j, Y, f:s a"  # Default
 
+# Q_CLUSTER = {
+# }
+
+# Q_CLUSTER = {
+#     'name': 'django_q_django',
+#     'sync': 'True',
+#     'workers': 1,
+#     'cpu_affinity': 1,
+#     'recycle': 20,
+#     'timeout': 60,
+#     'compress': False,
+#     'save_limit': 250,
+#     'queue_limit': 500,
+#     'label': 'Django Q',
+#     'redis': 'redis://h:p028ac2fece334ffa4edd40c6f2a368d10ba5a504b95b0375d4a3f2c13b60954f@ec2-3-230-64-160.compute-1.amazonaws.com:20929'
+# }
+
+# Activate Django-Heroku
 django_heroku.settings(locals())
+#del DATABASES['default']['OPTIONS']['sslmode']

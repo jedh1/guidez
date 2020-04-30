@@ -1,1 +1,1 @@
-web: gunicorn guidez.wsgi --log-file
+web: gunicorn guidez.wsgi --log-file -

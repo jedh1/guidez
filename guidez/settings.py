@@ -148,7 +148,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'csprojects200220@gmail.com'
 # EMAIL_HOST_PASSWORD =
@@ -171,23 +170,6 @@ SCHEDULER_CONFIG = {
 }
 SCHEDULER_AUTOSTART = True
 APSCHEDULER_DATETIME_FORMAT =  "N j, Y, f:s a"  # Default
-
-# Q_CLUSTER = {
-# }
-
-# Q_CLUSTER = {
-#     'name': 'django_q_django',
-#     'sync': 'True',
-#     'workers': 1,
-#     'cpu_affinity': 1,
-#     'recycle': 20,
-#     'timeout': 60,
-#     'compress': False,
-#     'save_limit': 250,
-#     'queue_limit': 500,
-#     'label': 'Django Q',
-#     'redis': 'redis://h:p028ac2fece334ffa4edd40c6f2a368d10ba5a504b95b0375d4a3f2c13b60954f@ec2-3-230-64-160.compute-1.amazonaws.com:20929'
-# }
 
 # Activate Django-Heroku
 django_heroku.settings(locals())

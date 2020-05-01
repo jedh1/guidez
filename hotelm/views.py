@@ -155,9 +155,24 @@ def print_delay(request):
     res = [['1','1','1','1'],['2','2','2','2']]
     return render(request, 'hotelm/test.html', {'res':res})
 
+def email_test():
+    res = [['1','1','1','1'],['2','2','2','2'],['3','3','3','3']]
+    subject = 'Email-test'
+    txt_message = 'Have a great day!'
+    html_body = render_to_string('hotelm/results_email.html', {'res': res})
+    msg = EmailMultiAlternatives(
+        subject = subject,
+        body = txt_message,
+        from_email = EMAIL_HOST_USER,
+        to = 'jedhcl@gmail.com',
+    )
+    msg.attach_alternative(html_body, "text/html")
+    time.sleep(60)
+    msg.send()
+
 def test(request):
     scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
-    scheduler.add_job(print_delay, 'interval', seconds = 35, max_instances = 3, coalesce = True)
+    scheduler.add_job(email_test, 'interval', seconds = 65, max_instances = 3, coalesce = True)
     register_job(scheduler)
     scheduler.start()
     return render(request, 'hotelm/index.html')

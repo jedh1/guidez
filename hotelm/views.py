@@ -149,11 +149,9 @@ def delete_search(request):
         items = Search.objects.all().filter(user=request.user)
         return render(request, 'hotelm/history.html', {'items': items})
 
-def print_delay(request):
+def print_delay():
     time.sleep(33)
     print('print_delay test')
-    res = [['1','1','1','1'],['2','2','2','2']]
-    return render(request, 'hotelm/test.html', {'res':res})
 
 def email_test():
     res = [['1','1','1','1'],['2','2','2','2'],['3','3','3','3']]
@@ -169,6 +167,7 @@ def email_test():
     msg.attach_alternative(html_body, "text/html")
     time.sleep(60)
     msg.send()
+    print('email_test message sent')
 
 def test(request):
     scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)

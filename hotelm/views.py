@@ -150,7 +150,7 @@ def delete_search(request):
         return render(request, 'hotelm/history.html', {'items': items})
 
 def print_delay():
-    sleep(33)
+    time.sleep(33)
     print('test')
 
 def test(request):

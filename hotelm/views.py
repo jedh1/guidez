@@ -162,7 +162,7 @@ def email_test():
         subject = subject,
         body = txt_message,
         from_email = EMAIL_HOST_USER,
-        to = 'jedhcl@gmail.com',
+        to = ['jedhcl@gmail.com']
     )
     msg.attach_alternative(html_body, "text/html")
     time.sleep(60)

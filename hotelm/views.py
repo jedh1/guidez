@@ -149,11 +149,12 @@ def delete_search(request):
         items = Search.objects.all().filter(user=request.user)
         return render(request, 'hotelm/history.html', {'items': items})
 
+def print_delay():
+    sleep(33)
+    print('test')
+
 def test(request):
     scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
-    def print_delay():
-        sleep(33)
-        print('test')
     scheduler.add_job(print_delay, 'interval', seconds = 35, max_instances = 3, coalesce = True)
     register_job(scheduler)
     scheduler.start()

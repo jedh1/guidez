@@ -11,7 +11,7 @@ spc_rates = (
 )
 
 class SearchForm(forms.Form):
-    email = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Email (Optional)'}), required=False)
+    email = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Email'}))
     email_box = forms.BooleanField(label='Send results to email? (Optional)', required=False)
     email_freq = forms.IntegerField(label='Send results for (0-30) days:', min_value=0, max_value=30, required=False)
     destination = forms.CharField(label='Destination', widget=forms.TextInput())

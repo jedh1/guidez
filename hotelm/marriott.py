@@ -118,7 +118,7 @@ def email_marriott_results(res, recipient):
     msg = EmailMultiAlternatives(
         subject = subject,
         body = txt_message,
-        from_email = EMAIL_HOST_USER,
+        from_email = 'csprojects200220@gmail.com',
         to = [recipient],
     )
     msg.attach_alternative(html_body, "text/html")

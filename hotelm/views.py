@@ -114,18 +114,12 @@ def get_search(request):
             searchobj.save()
             #search and email results
             searchobj_id=str(int(searchobj.id))
-            res2 = []
-            res2 = search_and_email(searchobj_id)
-            if res2 == 'Results failed':
-                fail = 'Search failed. Please resubmit search form.'
-                return render(request, 'hotelm/results.html', {'res': '1', 'fail':fail})
             #create recurrence object
-            if searchobj.recurrence > 0:
-                scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
-                scheduler.add_job(search_and_email, 'interval', seconds = 86400, id=searchobj_id, max_instances = 3, coalesce = True, args=[searchobj_id])
-                register_job(scheduler)
-                scheduler.start()
-            return render(request, 'hotelm/results.html', {'res': res2})
+            scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
+            scheduler.add_job(search_and_email, 'interval', seconds = 86400, id=searchobj_id, max_instances = 3, coalesce = True, next_run_time=datetime.now(), args=[searchobj_id])
+            register_job(scheduler)
+            scheduler.start()
+            return render(request, 'hotelm/search2.html')
     # initial form screen
     else:
         form = SearchForm()
@@ -150,7 +144,6 @@ def delete_search(request):
         return render(request, 'hotelm/history.html', {'items': items})
 
 def print_delay():
-    time.sleep(33)
     print('print_delay test')
 
 def email_test():
@@ -172,7 +165,7 @@ def email_test():
 
 def test(request):
     scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
-    scheduler.add_job(email_test, 'interval', seconds = 65, max_instances = 3, coalesce = True)
+    scheduler.add_job(print_delay, 'interval', seconds = 15, max_instances = 3, coalesce = True, next_run_time=datetime.datetime.now())
     register_job(scheduler)
     scheduler.start()
     return render(request, 'hotelm/index.html')

@@ -116,7 +116,7 @@ def get_search(request):
             searchobj_id=str(int(searchobj.id))
             #create recurrence object
             scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
-            scheduler.add_job(search_and_email, 'interval', seconds = 86400, id=searchobj_id, max_instances = 3, coalesce = True, next_run_time=datetime.now(), args=[searchobj_id])
+            scheduler.add_job(search_and_email, 'interval', seconds = 86400, id=searchobj_id, max_instances = 3, coalesce = True, next_run_time=datetime.datetime.now(), args=[searchobj_id])
             register_job(scheduler)
             scheduler.start()
             return render(request, 'hotelm/search2.html')

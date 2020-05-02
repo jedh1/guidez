@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, send_mail
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django_apscheduler.jobstores import DjangoJob, register_job
@@ -162,8 +162,8 @@ def email_test():
     msg = EmailMultiAlternatives(
         subject = subject,
         body = txt_message,
-        from_email = EMAIL_HOST_USER,
-        to = ['jedhcl@gmail.com']
+        from_email = 'csprojects200220@gmail.com',
+        to = ['jedhcl@gmail.com'],
     )
     msg.attach_alternative(html_body, "text/html")
     time.sleep(60)
@@ -175,5 +175,4 @@ def test(request):
     scheduler.add_job(email_test, 'interval', seconds = 65, max_instances = 3, coalesce = True)
     register_job(scheduler)
     scheduler.start()
-    print('test start')
     return render(request, 'hotelm/index.html')

@@ -174,4 +174,5 @@ def test(request):
     scheduler.add_job(email_test, 'interval', seconds = 65, max_instances = 3, coalesce = True)
     register_job(scheduler)
     scheduler.start()
+    print('test start')
     return render(request, 'hotelm/index.html')

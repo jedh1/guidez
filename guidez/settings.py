@@ -145,12 +145,11 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Email settings
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'app169400830@heroku.com'
+EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_PASSWORD')
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'csprojects200220@gmail.com'
-# EMAIL_HOST_PASSWORD =
+EMAIL_USE_TLS = True
 
 # background task settings
 MAX_ATTEMPTS = 1

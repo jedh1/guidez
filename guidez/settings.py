@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'django_apscheduler',
     'hotelm.apps.HotelmConfig',
     'background_task',
-    'django_q',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -145,9 +144,10 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Email settings
+SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'app169400830@heroku.com'
-EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_PASSWORD')
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 

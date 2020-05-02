@@ -154,6 +154,7 @@ def print_delay():
     print('print_delay test')
 
 def email_test():
+    print('email_test start')
     res = [['1','1','1','1'],['2','2','2','2'],['3','3','3','3']]
     subject = 'Email-test'
     txt_message = 'Have a great day!'

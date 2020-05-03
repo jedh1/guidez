@@ -7,15 +7,42 @@
 <p>
     <h2>About</h2>
     <p>Year : {{ time | date:'Y' }}, Month : {{ time | date:'M' }}</p>
-    <p>This site is powered by Django</p>
 <br>
-<p>
-    Thank you for visiting my site.</p>
+<p>Thank you for visiting my site.</p>
     <p>Features of this site:</p>
     <ul>
-        <li>Search Marriott for hotels.</li>
+        <li>Search Marriott for hotels, and results will be sent to your email.</li>
         <li>Search results can be sent to your email daily to track prices and find the lowest prices.</li>
         <li>Create a username and password to store your search history.</li>
         <li>Delete search history.</li>
     </ul>
+<br>
+
+{% if message %}
+<h2>{{ message }}</h2>
+{% endif %}
+
+<p>Questions or comments? Please fill out the form below:</p>
+    <form action="/search/" method="post">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+                {{ form.email|as_crispy_field }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+                {{ form.subject|as_crispy_field }}
+            </div>
+        </div>
+        <div class="form-row align-items-end">
+            <div class="form">
+                <label for="exampleFormControlTextarea1">Comment</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">
+                {{ form.comment|as_crispy_field }}
+                </textarea>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="show_button">Submit</button>
+    </form>
 {% endblock %}

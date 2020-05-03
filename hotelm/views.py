@@ -21,25 +21,25 @@ def index(request):
 # About page
 def about(request):
     time = datetime.datetime.now()
-    ''' # Test BackgroundScheduler
-    searchobj = Search(
-        recipient = 'test@test.com',
-        destination = 'test',
-        check_in = 'test check-in',
-        check_out = 'test check-out',
-        special_rates = 'test',
-        recurrence = 5,
-        )
-    if request.user.is_authenticated:
-        searchobj.user = request.user
-    searchobj.save()
-    searchobj_id=str(int(searchobj.id))
-    scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
-    scheduler.add_job(print_test, 'interval', seconds = 3, id=searchobj_id, max_instances = 3, coalesce = True, args=[searchobj_id])
-    register_job(scheduler)
-    scheduler.start()
-    '''
-    return render(request, 'hotelm/about.html', {'time': time})
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            comment_email = form.cleaned_data['email']
+            comment_subject = form.cleaned_data['subject']
+            comment_body = form.cleaned_data['comment']
+            msg = EmailMultiAlternatives(
+                subject = comment_subject,
+                body = comment_body,
+                from_email = 'csprojects200220@gmail.com',
+                to = ['jedhcl@gmail.com'],
+            )
+            msg.send()
+            message = 'Message sent to the moderator!'
+            return render(request, 'hotelm/about.html', {'time': time, 'form': form, 'message': message})
+    # initial form screen
+    else:
+        form = SearchForm()
+    return render(request, 'hotelm/about.html', {'time': time,'form': form})
 
 # logout user page
 def logout_request(request):

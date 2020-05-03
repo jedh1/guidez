@@ -1,9 +1,10 @@
 {% extends 'hotelm/base.html' %}
-{% block title %} About {% endblock %}
+{% block title %} About This Site {% endblock %}
 
+{% load static %}
+{% load crispy_forms_tags %}
 
 {% block body_block %}
-{% load static %}
 <p>
     <h2>About</h2>
     <p>Year : {{ time | date:'Y' }}, Month : {{ time | date:'M' }}</p>
@@ -36,11 +37,8 @@
             </div>
         </div>
         <div class="form-row align-items-end">
-            <div class="form">
-                <label for="exampleFormControlTextarea1">Comment</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">
+            <div class="form-group col-md-6 mb-0">
                 {{ form.comment|as_crispy_field }}
-                </textarea>
             </div>
         </div>
         <button type="submit" class="btn btn-primary" id="show_button">Submit</button>

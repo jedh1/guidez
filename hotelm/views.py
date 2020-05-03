@@ -9,7 +9,7 @@ from django_apscheduler.jobstores import DjangoJob, register_job
 from apscheduler.schedulers.background import BackgroundScheduler
 import datetime, time
 from .models import Search
-from .forms import SearchForm, SignUpForm
+from .forms import SearchForm, SignUpForm, CommentForm
 from .marriott import email_marriott_results, fill_form, prepare_driver, scrape_results
 from guidez.settings import EMAIL_HOST_USER
 from .jobs import search_and_email
@@ -22,7 +22,7 @@ def index(request):
 def about(request):
     time = datetime.datetime.now()
     if request.method == 'POST':
-        form = SearchForm(request.POST)
+        form = CommentForm(request.POST)
         if form.is_valid():
             comment_email = form.cleaned_data['email']
             comment_subject = form.cleaned_data['subject']
@@ -38,7 +38,7 @@ def about(request):
             return render(request, 'hotelm/about.html', {'time': time, 'form': form, 'message': message})
     # initial form screen
     else:
-        form = SearchForm()
+        form = CommentForm()
     return render(request, 'hotelm/about.html', {'time': time,'form': form})
 
 # logout user page
@@ -115,7 +115,7 @@ def get_search(request):
             )
             if request.user.is_authenticated:
                 searchobj.user = request.user
-            if form.cleaned_data['email_box'] == True and request.user.is_authenticated:
+            if form.cleaned_data['email_box'] == True:
                 searchobj.recurrence = int(form.cleaned_data['email_freq']) + 1
             else:
                 searchobj.recurrence = 1

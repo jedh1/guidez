@@ -97,13 +97,21 @@ def get_search(request):
         form = SearchForm(request.POST)
         if form.is_valid():
             # Create Search object
+            if form.cleaned_data['special_rates']:
+                sp = form.cleaned_data['special_rates']
+            else:
+                sp = "0"
+            if form.cleaned_data['special_rates_code']:
+                spc = form.cleaned_data['special_rates_code']
+            else:
+                spc = "0"
             searchobj = Search(
                 recipient = form.cleaned_data['email'],
                 destination = form.cleaned_data['destination'],
                 check_in = form.cleaned_data['cin_date'],
                 check_out = form.cleaned_data['cout_date'],
-                special_rates = form.cleaned_data['special_rates'],
-                special_rates_code = form.cleaned_data['special_rates_code']
+                special_rates = sp,
+                special_rates_code = spc
             )
             if request.user.is_authenticated:
                 searchobj.user = request.user

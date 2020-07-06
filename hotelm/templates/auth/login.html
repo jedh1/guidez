@@ -1,0 +1,20 @@
+{% extends 'hotelm/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block body_block %}
+<h1>Log-in</h1>
+
+{% if message %}
+    <h3>{{ message }}</h3>
+{% endif %}
+
+    <form action="/login/" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Log In</button>
+    </form>
+    <p>
+        Register a new account here: <a href="/register" target="blank"><strong>Register</strong></a>
+    <p>
+{% endblock %}

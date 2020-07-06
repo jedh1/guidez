@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Search Results</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  {% load static %}
+  <script src="{% static 'js/sorttable.js' %}"></script>
+  <style>
+  table.sortable thead {
+      background-color:#959595;
+      color: black;
+      font-weight: bold;
+      cursor: default;
+  }
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 3px;
+  }
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+  </style>
+</head>
+<body>
+<center>
+
+<h1>Results</h1>
+
+<table class="sortable">
+<thead>
+  <tr><th>Name</th><th>Price</th><th>Address</th><th>Link</th></tr>
+</thead>
+<tbody>
+    {% for item in res %}
+    <tr>
+        <td>{{ item.0 }}</td>
+        <td>{{ item.1 }}</td>
+        <td><a class="address-link" href="https://maps.google.com/?q={{ item.2 }}">{{ item.2 }}</a></td>
+        <td><a class="hotel-link" href="{{ item.3 }}">Link</a></td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+</center>
+</body>

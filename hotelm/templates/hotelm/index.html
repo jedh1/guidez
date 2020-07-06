@@ -1,0 +1,41 @@
+{% extends 'hotelm/base.html' %}
+{% block title %} Home - Marriott Search {% endblock %}
+
+{% block body_block %}
+{% load static %}
+<p>
+<h2>Home</h2>
+<p>
+
+{% if message %}
+<h2>{{ message }}</h2>
+{% endif %}
+
+<p>Hello! Thank you for visiting my site.</p>
+<p>Features of this site:</p>
+<ul>
+    <li>Search Marriott for hotels, and results will be sent to your email.</li>
+    <li>Search results can be sent to your email daily to track prices and find the lowest prices.</li>
+    <li>Create a username and password to store your search history.</li>
+    <li>Delete search history.</li>
+</ul>
+
+{% if res %}
+<table class="sortable">
+<thead>
+  <tr><th>Name</th><th>Location</th><th>Price</th><th>Link</th></tr>
+</thead>
+<tbody>
+    {% for item in res %}
+    <tr>
+        <td>{{ item.0 }}</td>
+        <td>{{ item.1 }}</td>
+        <td><a class="link3-link" href="https://maps.google.com/?q={{ item.2 }}">{{ item.2 }}</a></td>
+        <td>{{ item.3 }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+{% endif %}
+
+{% endblock %}

@@ -10,6 +10,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from guidez.settings import EMAIL_HOST_USER
+from PIL import Image
 
 def prepare_driver(url):
     #Chrome options
@@ -94,7 +95,11 @@ def fill_form(driver, location, cInDate, cOutDate, special_rates, special_rates_
     # time.sleep(1)
     # driver.find_element_by_xpath("//li[contains(text(),'Price')]").click()
     # print('Clicked sort by price')
-    time.sleep(10)
+    time.sleep(20)
+    print("driver save screen shot initiating")
+    driver.save_screenshot("image.png")
+    image = Image.open("image.png")
+    image.show()
     #wait = WebDriverWait(driver, 60).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'l-property-name')))
     print("fill_form Success")
 

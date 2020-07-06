@@ -24,14 +24,13 @@ def prepare_driver(url):
     # https://www.andressevilla.com/running-chromedriver-with-python-selenium-on-heroku/
     chrome_options = webdriver.ChromeOptions()
     chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument('--window-size=1920,1080')
+    # chrome_options.add_argument("--headless")
+    # chrome_options.add_argument('--window-size=1400,800')
     chrome_options.add_argument('--disable-gpu')
-    chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--no-sandbox")
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
     driver.get(url)
-    wait = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.NAME, 'destinationAddress.destination')))
+    wait = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.NAME, 'destinationAddress.destination')))
     return driver
 
 def fill_form(driver, location, cInDate, cOutDate, special_rates, special_rates_code):

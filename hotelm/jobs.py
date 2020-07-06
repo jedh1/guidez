@@ -22,7 +22,7 @@ import time
 
 def search_and_email(searchobj_id):
     # try searching Marriott website
-    res2 = []
+    res, res2 = [], []
     try:
         searchobj_id_int = int(searchobj_id)
         searchobj = Search.objects.get(pk=searchobj_id_int)
@@ -41,12 +41,15 @@ def search_and_email(searchobj_id):
         print("scrape results start")
         res = scrape_results(driver)
         print("append results list")
-        try:
-            for i in range(len(res[0])):
-                res2.append([res[0][i], res[3][i], res[2][i], res[1][i]])
+        if res == []:
+            print('no results')
+        else:
+            try:
                 # this algorithm has an error if price is unavailable.
-        except:
-            print("Results append issue: some hotels may not have availability on selected dates")
+                for i in range(len(res[0])):
+                    res2.append([res[0][i], res[3][i], res[2][i], res[1][i]])
+            except:
+                print("Results append issue: some hotels may not have availability on selected dates")
         print("Search successfully completed")
     except:
         print("Search failed")

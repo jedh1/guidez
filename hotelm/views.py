@@ -115,7 +115,7 @@ def get_search(request):
             )
             if request.user.is_authenticated:
                 searchobj.user = request.user
-            if form.cleaned_data['email_box'] == True:
+            if form.cleaned_data['email_freq']:
                 searchobj.recurrence = int(form.cleaned_data['email_freq']) + 1
             else:
                 searchobj.recurrence = 1

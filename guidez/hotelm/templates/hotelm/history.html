@@ -1,12 +1,31 @@
 {% extends 'hotelm/base.html' %}
 {% block title %} Search Results - History {% endblock %}
 
+{% block head %}
+<style>
+table.sortable thead {
+    background-color:#959595;
+    color: black;
+    font-weight: bold;
+    cursor: default;
+}
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 3px;
+}
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+{% endblock %}
+
 {% block body_block %}
 <p>
 <h2>Marriott Search Results History</h2>
-
+Click on the table headers to sort.
+<br>
 <table class="sortable">
-
 {% if items %}
 <tbody>
     <thead>

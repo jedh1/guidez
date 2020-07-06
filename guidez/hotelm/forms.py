@@ -11,9 +11,8 @@ spc_rates = (
 )
 
 class SearchForm(forms.Form):
-    email = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Email (Optional)'}), required=False)
-    email_box = forms.BooleanField(label='Send results to email? (Optional)', required=False)
-    email_freq = forms.IntegerField(label='Send results for (0-30) days:', min_value=0, max_value=30, required=False)
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'Email'}))
+    email_freq = forms.IntegerField(label='Send results for (0-30) days: (Optional)', min_value=0, max_value=30, required=False)
     destination = forms.CharField(label='Destination', widget=forms.TextInput())
     cin_date = forms.CharField(label='Check-in Date', widget=forms.TextInput())
     cout_date = forms.CharField(label='Check-out Date', widget=forms.TextInput())
@@ -27,3 +26,8 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'email', 'password1', 'password2',)
+
+class CommentForm(forms.Form):
+    email = forms.EmailField()
+    subject = forms.CharField(widget=forms.TextInput())
+    comment = forms.CharField(widget=forms.Textarea(attrs={"rows":5, "cols":20}))

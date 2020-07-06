@@ -1,5 +1,6 @@
 import selenium
 import time
+import os
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from selenium import webdriver
@@ -12,17 +13,28 @@ from guidez.settings import EMAIL_HOST_USER
 
 def prepare_driver(url):
     #Chrome options
-    options = Options()
-    options.add_argument('--window-size=1920,1080')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--headless')
-    #load Chrome driver
-    driver = webdriver.Chrome(executable_path="hotelm/drivers/chromedriver.exe", chrome_options=options)
+    # options = Options()
+    # options.add_argument('--window-size=1920,1080')
+    # options.add_argument('--disable-gpu')
+    # options.add_argument('--headless')
+    # #load Chrome driver
+    # driver = webdriver.Chrome(executable_path="hotelm/drivers/chromedriver.exe", chrome_options=options)
+
+    # Selenium for herokuapp
+    # https://www.andressevilla.com/running-chromedriver-with-python-selenium-on-heroku/
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument('--window-size=1920,1080')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
     driver.get(url)
-    wait = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, 'destinationAddress.destination')))
+    wait = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.NAME, 'destinationAddress.destination')))
     return driver
 
-def fill_form(driver, location, cInDate, cOutDate):
+def fill_form(driver, location, cInDate, cOutDate, special_rates, special_rates_code):
     print("fill_form start")
     # input location
     search_location = driver.find_element_by_name('destinationAddress.destination')
@@ -38,6 +50,7 @@ def fill_form(driver, location, cInDate, cOutDate):
     search_checkin.send_keys(Keys.BACKSPACE)
     search_checkin.send_keys(cInDate)
     search_checkin.send_keys(Keys.ESCAPE)
+    print('entered check-in date')
     # input check-out date
     search_checkout = driver.find_element_by_class_name('ccheckout')
     search_checkout.click()
@@ -45,23 +58,45 @@ def fill_form(driver, location, cInDate, cOutDate):
     search_checkout.send_keys(Keys.BACKSPACE)
     search_checkout.send_keys(cOutDate)
     search_checkout.send_keys(Keys.ESCAPE)
+    print('entered check-out date')
     # input special rates
-    search_special = driver.find_element_by_class_name('js-special-rates-header')
-    search_special.click()
-    time.sleep(1)
-    search_special2 = driver.find_element_by_xpath("//label[contains(text(),'Corporate')]")
-    search_special2.click()
-    driver.find_element_by_name("corporateCode").send_keys("MMP")
+    if special_rates:
+        search_special = driver.find_element_by_class_name('js-special-rates-header')
+        search_special.click()
+        print('clicked special rates dropdown')
+        time.sleep(1)
+        if special_rates == '1':
+            search_special2 = driver.find_element_by_xpath("//label[contains(text(),'Corporate')]")
+            search_special2.click()
+            print('clicked corporate')
+            if special_rates_code:
+                driver.find_element_by_name("corporateCode").send_keys(str(special_rates_code))
+                print('entered special_rates_code')
+        if special_rates == '2':
+            search_special2 = driver.find_element_by_xpath("//label[contains(text(),'CAA')]")
+            search_special2.click()
+            print('clicked CAA')
+        if special_rates == '3':
+            search_special2 = driver.find_element_by_xpath("//label[contains(text(),'Senior')]")
+            search_special2.click()
+            print('clicked Senior')
+        if special_rates == '4':
+            search_special2 = driver.find_element_by_xpath("//label[contains(text(),'Military')]")
+            search_special2.click()
+            print('clicked Military')
     # find search button and click it
     driver.find_element_by_css_selector("div.l-hsearch-find button").click()
+    print('Clicked search button')
     # wait until next page has loaded before running next function
-    wait = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'l-property-name')))
+    wait = WebDriverWait(driver, 60).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'l-property-name')))
     # Sort by price
     driver.find_element_by_xpath("//span[contains(text(),'Distance')]").click()
+    print('Clicked sort menu')
     time.sleep(1)
     driver.find_element_by_xpath("//li[contains(text(),'Price')]").click()
-    time.sleep(2)
-    wait = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'l-property-name')))
+    print('Clicked sort by price')
+    time.sleep(10)
+    #wait = WebDriverWait(driver, 60).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'l-property-name')))
     print("fill_form Success")
 
 def scrape_results(driver):
@@ -101,7 +136,7 @@ def email_marriott_results(res, recipient):
     msg = EmailMultiAlternatives(
         subject = subject,
         body = txt_message,
-        from_email = EMAIL_HOST_USER,
+        from_email = 'csprojects200220@gmail.com',
         to = [recipient],
     )
     msg.attach_alternative(html_body, "text/html")

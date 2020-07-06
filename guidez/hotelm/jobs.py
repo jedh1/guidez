@@ -8,20 +8,21 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from django_apscheduler.jobstores import DjangoJobStore, register_events
 import time
 
-def print_test(search_id):
-    search_id_int = int(search_id)
-    try:
-        searchobj = Search.objects.get(id=search_id_int)
-        if searchobj.recurrence > 0:
-            time.sleep(2)
-            print("print test")
-            searchobj.recurrence -= 1
-            searchobj.save()
-    except:
-        print("print_test function:::Search obj id=", search_id_int, " not found")
+# def print_test(search_id):
+#     search_id_int = int(search_id)
+#     try:
+#         searchobj = Search.objects.get(id=search_id_int)
+#         if searchobj.recurrence > 0:
+#             time.sleep(2)
+#             print("print test")
+#             searchobj.recurrence -= 1
+#             searchobj.save()
+#     except:
+#         print("print_test function:::Search obj id=", search_id_int, " not found")
 
 def search_and_email(searchobj_id):
     # try searching Marriott website
+    res2 = []
     try:
         searchobj_id_int = int(searchobj_id)
         searchobj = Search.objects.get(pk=searchobj_id_int)
@@ -35,16 +36,17 @@ def search_and_email(searchobj_id):
     try:
         print("prepare driver start")
         driver = prepare_driver("https://www.marriott.com/search/default.mi")
-        fill_form(driver, searchobj.destination, searchobj.check_in, searchobj.check_out)
+        fill_form(driver, searchobj.destination, searchobj.check_in, searchobj.check_out, searchobj.special_rates, searchobj.special_rates_code)
         time.sleep(1)
         print("scrape results start")
         res = scrape_results(driver)
-        print("init results list")
-        res2 = []
         print("append results list")
-        for i in range(len(res[0])):
-            res2.append([res[0][i], res[3][i], res[2][i], res[1][i]])
-            # this algorithm has an error if price is unavailable.
+        try:
+            for i in range(len(res[0])):
+                res2.append([res[0][i], res[3][i], res[2][i], res[1][i]])
+                # this algorithm has an error if price is unavailable.
+        except:
+            print("Results append issue: some hotels may not have availability on selected dates")
         print("Search successfully completed")
     except:
         print("Search failed")

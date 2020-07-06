@@ -23,6 +23,7 @@ tr:nth-child(even) {
 {% block body_block %}
 <p>
 <h2>Marriott Search Results</h2>
+{% if fail %}{{ fail }}{% endif %}
 <br>
 Click on the table headers to sort.
 <br>
